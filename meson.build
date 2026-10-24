@@ -79,6 +79,28 @@ executable(
     install: true,
 )
 
-install_data('default.conf', install_dir: get_option('datadir') / 'ashwc')
-install_data('LICENSE', install_dir: get_option('datadir') / 'licenses/ashwc')
-install_data('nauka.desktop', install_dir: get_option('datadir') / 'wayland-sessions')
+datadir = get_option('datadir')
+libdir = get_option('libdir')
+systemd_user_unit_dir = libdir / 'systemd/user'
+dinit_user_service_dir = libdir / 'dinit.d/user'
+
+install_data('default.conf', install_dir: datadir / 'nauka')
+install_data('LICENSE', install_dir: datadir / 'licenses/nauka')
+install_data('resources/nauka.desktop', install_dir: datadir / 'wayland-sessions')
+install_data('resources/nauka-portals.conf', install_dir: datadir / 'xdg-desktop-portal')
+install_data(
+    'resources/start-nauka',
+    install_dir: get_option('bindir'),
+    install_mode: 'rwxr-xr-x',
+)
+install_data(
+    'resources/nauka.service',
+    'resources/nauka-session.target',
+    'resources/nauka-shutdown.target',
+    install_dir: systemd_user_unit_dir,
+)
+install_data(
+    'resources/dinit/nauka',
+    'resources/dinit/nauka.target',
+    install_dir: dinit_user_service_dir,
+)
